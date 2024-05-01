@@ -478,8 +478,8 @@ private:
 
 		for (auto& symbol_data : sorted_symbols_data) {
 			uint32_t shifts = symbol_data.code_length - previous_length;
-			symbols_data[symbol_data.symbol].code = current_value << shifts;
-			current_value *= 2 * shifts;
+			current_value <<= shifts;
+			symbols_data[symbol_data.symbol].code = current_value;
 			current_value += 1;
 			previous_length = symbol_data.code_length;
 		}
