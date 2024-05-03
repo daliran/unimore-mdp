@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <cstdint>
 #include <cmath>
+#include <algorithm>
 
 static std::unordered_map<char, uint8_t> create_decoding_table() {
 
@@ -72,7 +73,11 @@ std::string base64_decode(const std::string& input) {
 
 	std::string input_without_new_line = input;
 
-	input_without_new_line.erase(std::find(input_without_new_line.begin(), input_without_new_line.end(), '\n'));
+	auto find = std::find(input_without_new_line.begin(), input_without_new_line.end(), '\n');
+
+	if (find != std::end(input_without_new_line)) {
+		input_without_new_line.erase(find);
+	}
 
 	for (size_t j = 0; j < input_without_new_line.length() / 4; ++j) {
 		std::string group = input_without_new_line.substr(j * 4, 4);
