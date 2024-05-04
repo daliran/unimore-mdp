@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "support", "support", "{CEED
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "huffman", "support\huffman\huffman.vcxproj", "{CBD16653-4939-4FE9-A83D-F69980B2BE18}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam3_lempel_ziv_stac", "exams\exam3_lempel_ziv_stac\exam3_lempel_ziv_stac.vcxproj", "{941F8B28-EA34-4EE2-8683-D8EA36A01948}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -127,6 +129,14 @@ Global
 		{CBD16653-4939-4FE9-A83D-F69980B2BE18}.Release|x64.Build.0 = Release|x64
 		{CBD16653-4939-4FE9-A83D-F69980B2BE18}.Release|x86.ActiveCfg = Release|Win32
 		{CBD16653-4939-4FE9-A83D-F69980B2BE18}.Release|x86.Build.0 = Release|Win32
+		{941F8B28-EA34-4EE2-8683-D8EA36A01948}.Debug|x64.ActiveCfg = Debug|x64
+		{941F8B28-EA34-4EE2-8683-D8EA36A01948}.Debug|x64.Build.0 = Debug|x64
+		{941F8B28-EA34-4EE2-8683-D8EA36A01948}.Debug|x86.ActiveCfg = Debug|Win32
+		{941F8B28-EA34-4EE2-8683-D8EA36A01948}.Debug|x86.Build.0 = Debug|Win32
+		{941F8B28-EA34-4EE2-8683-D8EA36A01948}.Release|x64.ActiveCfg = Release|x64
+		{941F8B28-EA34-4EE2-8683-D8EA36A01948}.Release|x64.Build.0 = Release|x64
+		{941F8B28-EA34-4EE2-8683-D8EA36A01948}.Release|x86.ActiveCfg = Release|Win32
+		{941F8B28-EA34-4EE2-8683-D8EA36A01948}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +153,7 @@ Global
 		{6C0A6A6B-7D8F-4819-99B2-91CE7A7153D2} = {5A64F4E1-1C9F-4AD3-92C8-5F529C943D74}
 		{32120ACA-9C31-40AD-926C-FABFC58F0BFB} = {5A64F4E1-1C9F-4AD3-92C8-5F529C943D74}
 		{CBD16653-4939-4FE9-A83D-F69980B2BE18} = {CEEDCD25-43A0-4801-B46F-072A995E60B4}
+		{941F8B28-EA34-4EE2-8683-D8EA36A01948} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD783DDE-DBA3-48E3-8E48-B5F50E6DA2AE}
