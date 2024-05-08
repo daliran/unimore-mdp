@@ -41,6 +41,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam5_y4m_gray", "exams\exa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam5_y4m_color", "exams\exam5_y4m_color\exam5_y4m_color.vcxproj", "{E8393E22-31FB-4B93-9D9E-DD37C59AB3FC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bit_torrent", "assignments\bit_torrent\bit_torrent.vcxproj", "{DCA2A204-DD73-41C5-A846-88DB2A968EEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -177,6 +179,14 @@ Global
 		{E8393E22-31FB-4B93-9D9E-DD37C59AB3FC}.Release|x64.Build.0 = Release|x64
 		{E8393E22-31FB-4B93-9D9E-DD37C59AB3FC}.Release|x86.ActiveCfg = Release|Win32
 		{E8393E22-31FB-4B93-9D9E-DD37C59AB3FC}.Release|x86.Build.0 = Release|Win32
+		{DCA2A204-DD73-41C5-A846-88DB2A968EEA}.Debug|x64.ActiveCfg = Debug|x64
+		{DCA2A204-DD73-41C5-A846-88DB2A968EEA}.Debug|x64.Build.0 = Debug|x64
+		{DCA2A204-DD73-41C5-A846-88DB2A968EEA}.Debug|x86.ActiveCfg = Debug|Win32
+		{DCA2A204-DD73-41C5-A846-88DB2A968EEA}.Debug|x86.Build.0 = Debug|Win32
+		{DCA2A204-DD73-41C5-A846-88DB2A968EEA}.Release|x64.ActiveCfg = Release|x64
+		{DCA2A204-DD73-41C5-A846-88DB2A968EEA}.Release|x64.Build.0 = Release|x64
+		{DCA2A204-DD73-41C5-A846-88DB2A968EEA}.Release|x86.ActiveCfg = Release|Win32
+		{DCA2A204-DD73-41C5-A846-88DB2A968EEA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -198,6 +208,7 @@ Global
 		{CB47E9F8-F1E2-45F1-AA7E-FAD0E3FD38D6} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 		{376BDBC0-BC90-46C2-BEB1-B4A40C9CB2DB} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 		{E8393E22-31FB-4B93-9D9E-DD37C59AB3FC} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
+		{DCA2A204-DD73-41C5-A846-88DB2A968EEA} = {5A64F4E1-1C9F-4AD3-92C8-5F529C943D74}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD783DDE-DBA3-48E3-8E48-B5F50E6DA2AE}
