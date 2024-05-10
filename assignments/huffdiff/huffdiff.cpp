@@ -173,24 +173,6 @@ private:
 	pam_header header_;
 	matrix<uint8_t> data_;
 
-	uint8_t map_to_visible(int32_t value) const {
-
-		if (value == 0) {
-			return 128;
-		}
-		else {
-			uint8_t result = static_cast<uint8_t>(value / 2.0 + 128);
-
-			if (value > 0) {
-				result += 1;
-			}
-
-			if (result > 255) {
-				return 255;
-			}
-		}
-	}
-
 public:
 	pam() {}
 
@@ -325,35 +307,6 @@ public:
 		return true;
 	}
 
-	matrix<uint8_t> calculate_visible_difference_image() const {
-
-		matrix<uint8_t> difference_image(header_.height, header_.width);
-
-		for (uint32_t row = 0; row < header_.height; ++row) {
-			for (uint32_t column = 0; column < header_.width; ++column) {
-
-				int32_t pixel = data_.get_value(row, column);
-
-				if (row == 0 && column == 0) {
-					// first pixel
-					difference_image.set_value(row, column, pixel);
-				}
-				else if (row > 0 && column == 0) {
-					// first column (except the first row)
-					int32_t pixel_above = data_.get_value(row - 1, column);
-					difference_image.set_value(row, column, map_to_visible(pixel - pixel_above));
-				}
-				else {
-					// all other positions excepts the first column
-					int32_t pixel_on_the_left = data_.get_value(row, column - 1);
-					difference_image.set_value(row, column, map_to_visible(pixel - pixel_on_the_left));
-				}
-			}
-		}
-
-		return difference_image;
-	}
-
 	matrix<int32_t> calculate_difference_image() const {
 
 		matrix<int32_t> difference_image(header_.height, header_.width);
@@ -428,7 +381,7 @@ struct huffman_node {
 
 class huffman {
 private:
-	void calculate_frequencies(const matrix<int32_t>& raw_data, std::map<uint8_t, symbol_data>& symbols_data) {
+	void calculate_frequencies(const matrix<int32_t>& raw_data, std::map<uint32_t, symbol_data>& symbols_data) {
 		for (auto& symbol : raw_data.data()) {
 			symbol_data& symbol_data = symbols_data[symbol];
 			symbol_data.symbol = symbol;
@@ -436,7 +389,7 @@ private:
 		}
 	}
 
-	void calculate_code_length(std::map<uint8_t, symbol_data>& symbols_data, std::shared_ptr<huffman_node> node, int depth) {
+	void calculate_code_length(std::map<uint32_t, symbol_data>& symbols_data, std::shared_ptr<huffman_node> node, int depth) {
 		
 		if (node->low_frequency_node == nullptr && node->high_frequency_node == nullptr) {
 			symbol_data& symbol_data = symbols_data[node->symbols.front()];
@@ -448,7 +401,7 @@ private:
 		calculate_code_length(symbols_data, node->high_frequency_node, depth + 1);
 	}
 
-	std::vector<symbol_data> get_symbols_sorted_by_code_length(const std::map<uint8_t, symbol_data>& symbols_data) {
+	std::vector<symbol_data> get_symbols_sorted_by_code_length(const std::map<uint32_t, symbol_data>& symbols_data) {
 
 		std::vector<symbol_data> sorted_symbols;
 
@@ -469,7 +422,7 @@ private:
 		return sorted_symbols;
 	}
 
-	void generate_canonical_code_from_length(std::map<uint8_t, symbol_data>& symbols_data) {
+	void generate_canonical_code_from_length(std::map<uint32_t, symbol_data>& symbols_data) {
 
 		auto sorted_symbols_data = get_symbols_sorted_by_code_length(symbols_data);
 
@@ -485,7 +438,7 @@ private:
 		}
 	}
 
-	void calculate_canonical_code(const matrix<int32_t>& raw_data, std::map<uint8_t, symbol_data>& symbols_data) {
+	void calculate_canonical_code(const matrix<int32_t>& raw_data, std::map<uint32_t, symbol_data>& symbols_data) {
 
 		calculate_frequencies(raw_data, symbols_data);
 
@@ -541,7 +494,7 @@ public:
 	
 	bool encode_data(const std::string& file_name, const matrix<int32_t>& raw_data) {
 
-		std::map<uint8_t, symbol_data> symbols_data;
+		std::map<uint32_t, symbol_data> symbols_data;
 
 		calculate_canonical_code(raw_data, symbols_data);
 
@@ -619,7 +572,7 @@ public:
 	
 		raw_data.resize(height_read_result.first, width_read_result.first);
 
-		std::map<uint8_t, symbol_data> symbols_data;
+		std::map<uint32_t, symbol_data> symbols_data;
 
 		for (uint32_t i = 0; i < number_of_elements_result.first; ++i) {
 
@@ -724,11 +677,6 @@ int main(int argc, char* argv[]) {
 			std::cerr << "Failed to read pam file" << std::endl;
 			return EXIT_FAILURE;
 		}
-
-		/*auto image_difference_data = loaded_image.calculate_visible_difference_image();
-		pam image_difference;
-		image_difference.load_from_raw_data(image_difference_data);
-		image_difference.write_to_file("difference.pam");*/
 
 		auto image_difference = loaded_image.calculate_difference_image();
 		huffman encoder;
