@@ -4,8 +4,6 @@
 #include <cstdint>
 #include <iomanip>
 
-// format pieces
-
 enum class context_type {
 	none,
 	list,
@@ -136,12 +134,16 @@ static void print_end_of_structure(context_type context, int indentation_level) 
 	}
 }
 
-
 static void parse_bencode(std::istream& input, int level, context_type context) {
 
 	while (true) {
 
 		char token = input.peek();
+
+		// end of exploration
+		if (token == EOF) {
+			return;
+		}
 
 		switch (token) {
 			case 'i': {			
@@ -149,10 +151,6 @@ static void parse_bencode(std::istream& input, int level, context_type context) 
 				input.ignore(1);	
 
 				auto value = read_integer(input);
-
-				if (input.eof()) {
-					exit(0);
-				}
 
 				print_integer(value, context, level);
 
@@ -220,10 +218,6 @@ static void parse_bencode(std::istream& input, int level, context_type context) 
 				else if (context == context_type::dictionary_key || context == context_type::pieces) {
 					// this string is a dictionary value, exiting the context
 					return;
-				}
-
-				if (input.eof()) {
-					exit(0);
 				}
 
 				break;
