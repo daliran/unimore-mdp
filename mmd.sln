@@ -61,6 +61,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam8_truecolor_pcx", "exam
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam8_256colors_pcx", "exams\exam8_256colors_pcx\exam8_256colors_pcx.vcxproj", "{9296845A-6F2F-4A70-B56E-48E5BD861BEA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam9_snappy_decoding", "exams\exam9_snappy_decoding\exam9_snappy_decoding.vcxproj", "{55470D25-AB60-47E1-B433-D0AAF61C251F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -277,6 +279,14 @@ Global
 		{9296845A-6F2F-4A70-B56E-48E5BD861BEA}.Release|x64.Build.0 = Release|x64
 		{9296845A-6F2F-4A70-B56E-48E5BD861BEA}.Release|x86.ActiveCfg = Release|Win32
 		{9296845A-6F2F-4A70-B56E-48E5BD861BEA}.Release|x86.Build.0 = Release|Win32
+		{55470D25-AB60-47E1-B433-D0AAF61C251F}.Debug|x64.ActiveCfg = Debug|x64
+		{55470D25-AB60-47E1-B433-D0AAF61C251F}.Debug|x64.Build.0 = Debug|x64
+		{55470D25-AB60-47E1-B433-D0AAF61C251F}.Debug|x86.ActiveCfg = Debug|Win32
+		{55470D25-AB60-47E1-B433-D0AAF61C251F}.Debug|x86.Build.0 = Debug|Win32
+		{55470D25-AB60-47E1-B433-D0AAF61C251F}.Release|x64.ActiveCfg = Release|x64
+		{55470D25-AB60-47E1-B433-D0AAF61C251F}.Release|x64.Build.0 = Release|x64
+		{55470D25-AB60-47E1-B433-D0AAF61C251F}.Release|x86.ActiveCfg = Release|Win32
+		{55470D25-AB60-47E1-B433-D0AAF61C251F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -308,6 +318,7 @@ Global
 		{33BDCF16-1709-47CC-8142-2045FFB91E94} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 		{FEBA237D-BE5F-49AA-810F-5F082558B0F4} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 		{9296845A-6F2F-4A70-B56E-48E5BD861BEA} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
+		{55470D25-AB60-47E1-B433-D0AAF61C251F} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD783DDE-DBA3-48E3-8E48-B5F50E6DA2AE}
