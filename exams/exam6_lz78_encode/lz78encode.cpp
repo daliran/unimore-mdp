@@ -160,7 +160,7 @@ bool lz78encode(const std::string& input_filename, const std::string& output_fil
 	
 	bit_writer bit_writer(output);
 
-	dictionary<uint8_t> dictionary(std::pow(2, maxbits));
+	dictionary<uint8_t> dictionary(static_cast<uint64_t>(std::pow(2, maxbits)));
 
 	output << "LZ78";
 	bit_writer.write_number(static_cast<uint64_t>(maxbits), 5);
@@ -191,7 +191,7 @@ bool lz78encode(const std::string& input_filename, const std::string& output_fil
 
 		// Calculate bits to be used for the encoding
 		auto last_key = dictionary.last_key();
-		uint8_t bits_to_use_for_encoding = last_key == 0 ? 0 : std::log2(dictionary.last_key()) + 1;
+		uint8_t bits_to_use_for_encoding = last_key == 0 ? 0 : static_cast<uint8_t>(std::log2(dictionary.last_key())) + 1;
 
 		if (to_search.size() > 0) {
 			dictionary.add_key(to_search);

@@ -33,9 +33,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "huffman", "support\huffman\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam3_lempel_ziv_stac", "exams\exam3_lempel_ziv_stac\exam3_lempel_ziv_stac.vcxproj", "{941F8B28-EA34-4EE2-8683-D8EA36A01948}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam_4_read_pbm", "exams\exam_4_read_pbm\exam_4_read_pbm.vcxproj", "{A2605330-C985-4AC0-9659-E0E21C6E5681}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam4_read_pbm", "exams\exam4_read_pbm\exam4_read_pbm.vcxproj", "{A2605330-C985-4AC0-9659-E0E21C6E5681}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam_4_convert_pbm", "exams\exam_4_convert_pbm\exam_4_convert_pbm.vcxproj", "{CB47E9F8-F1E2-45F1-AA7E-FAD0E3FD38D6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam4_convert_pbm", "exams\exam4_convert_pbm\exam4_convert_pbm.vcxproj", "{CB47E9F8-F1E2-45F1-AA7E-FAD0E3FD38D6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam5_y4m_gray", "exams\exam5_y4m_gray\exam5_y4m_gray.vcxproj", "{376BDBC0-BC90-46C2-BEB1-B4A40C9CB2DB}"
 EndProject
@@ -51,7 +51,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam7_ppm_split", "exams\ex
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam7_packbits", "exams\exam7_packbits\exam7_packbits.vcxproj", "{3D9F1BC5-93C8-4EB9-BD66-95166387BF21}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam_7_base64", "exams\exam_7_base64\exam_7_base64.vcxproj", "{5C3CA54A-1980-43BB-886A-0019CC88F024}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam7_base64", "exams\exam7_base64\exam7_base64.vcxproj", "{5C3CA54A-1980-43BB-886A-0019CC88F024}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam7_json", "exams\exam7_json\exam7_json.vcxproj", "{00B3B173-6982-4281-ACEF-A781D55A0102}"
 EndProject

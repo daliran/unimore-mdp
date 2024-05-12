@@ -4,14 +4,14 @@
 #include "mat.h"
 
 static void write_run(std::vector<uint8_t>& buffer, std::vector<uint8_t>& encoded) {
-	uint8_t run_byte = 257 - buffer.size();
+	uint8_t run_byte = 257 - static_cast<uint8_t>(buffer.size());
 	encoded.push_back(run_byte);
 	encoded.push_back(buffer.front());
 	buffer.clear();
 }
 
 static void write_copy(std::vector<uint8_t>& buffer, std::vector<uint8_t>& encoded) {
-	uint8_t copy_byte = buffer.size() - 1;
+	uint8_t copy_byte = static_cast<uint8_t>(buffer.size()) - 1;
 	encoded.push_back(copy_byte);
 	std::copy(buffer.begin(), buffer.end(), std::back_inserter(encoded));
 	buffer.clear();

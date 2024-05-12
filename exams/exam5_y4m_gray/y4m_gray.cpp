@@ -6,8 +6,8 @@
 #include "mat.h"
 
 struct header_data {
-	uint64_t height = 0;
-	uint64_t width = 0;
+	int height = 0;
+	int width = 0;
 	std::string chroma_subsampling;
 };
 
@@ -79,8 +79,8 @@ static std::pair<frame_data, bool> read_frame(const header_data& header, std::is
 	}
 
 	//Y
-	for (uint64_t row = 0; row < header.height; ++row) {
-		for (uint64_t col = 0; col < header.width; ++col) {
+	for (int row = 0; row < header.height; ++row) {
+		for (int col = 0; col < header.width; ++col) {
 
 			uint8_t pixel = 0;
 			input.read(reinterpret_cast<char*>(&pixel), sizeof(pixel));
@@ -94,8 +94,8 @@ static std::pair<frame_data, bool> read_frame(const header_data& header, std::is
 	}
 
 	//Cb
-	for (uint64_t row = 0; row < header.height/4; ++row) {
-		for (uint64_t col = 0; col < header.width/4; ++col) {
+	for (int row = 0; row < header.height/4; ++row) {
+		for (int col = 0; col < header.width/4; ++col) {
 
 			uint8_t pixel = 0;
 			input.read(reinterpret_cast<char*>(&pixel), sizeof(pixel));
@@ -107,8 +107,8 @@ static std::pair<frame_data, bool> read_frame(const header_data& header, std::is
 	}
 
 	//Cr
-	for (uint64_t row = 0; row < header.height / 4; ++row) {
-		for (uint64_t col = 0; col < header.width / 4; ++col) {
+	for (int row = 0; row < header.height / 4; ++row) {
+		for (int col = 0; col < header.width / 4; ++col) {
 
 			uint8_t pixel = 0;
 			input.read(reinterpret_cast<char*>(&pixel), sizeof(pixel));

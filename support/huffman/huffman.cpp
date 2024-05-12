@@ -365,7 +365,7 @@ static bool decode_data(std::string input_file, std::string output_file) {
 			return false;
 		}
 
-		map[read_symbol.first] = read_code_length.first;
+		map[static_cast<uint8_t>(read_symbol.first)] = read_code_length.first;
 	}
 
 	huffman_code<uint8_t> huffman(map);

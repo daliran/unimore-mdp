@@ -25,19 +25,19 @@ bool LoadPPM(const std::string& filename, mat<vec3b>& img) {
 
 	std::string width;
 	input >> width >> std::ws;
-	uint64_t width_value = std::stoi(width);
+	int width_value = std::stoi(width);
 
 	std::string height;
 	input >> height >> std::ws;
-	uint64_t height_value = std::stoi(height);
+	int height_value = std::stoi(height);
 
 	std::string max_value;
 	input >> max_value >> std::ws;
 
 	img.resize(height_value, width_value);
 
-	for (uint64_t row = 0; row < height_value; ++row) {
-		for (uint64_t col = 0; col < width_value; ++col){
+	for (int row = 0; row < height_value; ++row) {
+		for (int col = 0; col < width_value; ++col){
 			auto& vec = img(row, col);
 			input.read(reinterpret_cast<char*>(&vec[0]), sizeof(vec[0]));
 			input.read(reinterpret_cast<char*>(&vec[1]), sizeof(vec[1]));
