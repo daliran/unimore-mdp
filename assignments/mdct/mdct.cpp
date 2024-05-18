@@ -113,7 +113,7 @@ std::vector<T> anti_transform(const std::vector<double>& coefficients, uint64_t 
 			uint64_t sample_offset = (i - 1) * window_size;
 
 			for (uint64_t window_offset = 0; window_offset < window_size; ++window_offset) {
-				samples[sample_offset + window_offset] = window[window_offset];
+				samples[sample_offset + window_offset] += window[window_offset];
 			}
 		}
 
@@ -122,7 +122,7 @@ std::vector<T> anti_transform(const std::vector<double>& coefficients, uint64_t 
 			uint64_t sample_offset = i * window_size;
 
 			for (uint64_t window_offset = 0; window_offset < window_size; ++window_offset) {
-				samples[sample_offset + window_offset] = window[window_size + window_offset];
+				samples[sample_offset + window_offset] += window[window_size + window_offset];
 			}
 		}
 
