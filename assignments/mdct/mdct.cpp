@@ -10,10 +10,29 @@
 #include <sstream>
 #include <cmath>
 
-template<typename T>
-std::vector<double> transform(const std::vector<T>& values, uint64_t window_size) {
+struct mdct_cache {
+	std::vector<double> w_cache;
+	std::vector<std::vector<double>> cos_cache;
 
-	// Minimum number of windows to fit the samples
+	mdct_cache(uint64_t window_size) : w_cache(window_size * 2), cos_cache(window_size, std::vector<double>(window_size * 2)){
+		for (uint64_t n = 0; n < window_size * 2; ++n) {
+			double wn_body = std::numbers::pi / (2 * window_size) * (n + 0.5);
+			w_cache[n] = std::sin(wn_body);
+		}
+
+		for (uint64_t k = 0; k < window_size; ++k) {
+			for (uint64_t n = 0; n < window_size * 2; ++n) {
+				double cos_body = (std::numbers::pi / window_size) * (n + 0.5 + window_size / 2.0) * (k + 0.5);
+				cos_cache[k][n] = std::cos(cos_body);
+			}
+		}
+	}
+};
+
+template<typename T>
+std::vector<double> transform(const std::vector<T>& values, uint64_t window_size, const mdct_cache& cache) {
+
+	// Minimum number of windows to fit the samples (not including the padding)
 	uint64_t number_of_windows = static_cast<uint64_t>(std::ceil(
 		static_cast<double>(values.size()) / static_cast<double>(window_size)));
 
@@ -21,41 +40,28 @@ std::vector<double> transform(const std::vector<T>& values, uint64_t window_size
 	std::vector<T> samples_with_padding((number_of_windows + 2) * window_size);
 	std::copy(values.begin(), values.end(), samples_with_padding.begin() + window_size);
 
-	std::vector<double> coefficients((number_of_windows - 1) * window_size);
-
-	std::unordered_map <uint64_t, std::unordered_map<uint64_t, double>> cos_cache;
-	std::unordered_map<uint64_t, double> w_cache;
-
-	// Calculate cache
-	for (uint64_t n = 0; n < window_size * 2; ++n) {
-		double wn_body = std::numbers::pi / (2 * window_size) * (n + 0.5);
-		w_cache[n] = std::sin(wn_body);
-	}
-
-	for (uint64_t k = 0; k < window_size; ++k) {
-		for (uint64_t n = 0; n < window_size * 2; ++n) {
-			double cos_body = (std::numbers::pi / window_size) * (n + 0.5 + window_size / 2.0) * (k + 0.5);
-			cos_cache[k][n] = std::cos(cos_body);
-		}
-	}
+	std::vector<double> coefficients((number_of_windows + 1) * window_size);
 
 	std::cout << "Transform begin" << std::endl;
 
-	// For each window pair
-	for (uint64_t i = 0; i < number_of_windows - 1; ++i) {
+	// For each pair / coefficient
+	for (uint64_t i = 0; i < number_of_windows + 1; ++i) {
 
 		uint64_t from = i * window_size;
 
-		// Calculate the window
+		// Calculate the pair (all k components) -> 1 pair = window_size coefficients
 		for (uint64_t k = 0; k < window_size; ++k) {
 			double Xk = 0;
+
+			// Calculate the k component
 			for (uint64_t n = 0; n < window_size * 2; ++n) {
-				Xk += (samples_with_padding[from + n] * w_cache[n] * cos_cache[k][n]);
+				Xk += (samples_with_padding[from + n] * cache.w_cache[n] * cache.cos_cache[k][n]);
 			}
+
 			coefficients[from + k] = Xk;
 		}
 
-		std::cout << "Window pair: " << i << " calculated" << std::endl;
+		//std::cout << "Pair: " << i << " calculated" << std::endl;
 	}
 
 	std::cout << "Transform completed, total coefficients: " << coefficients.size() << std::endl;
@@ -64,48 +70,36 @@ std::vector<double> transform(const std::vector<T>& values, uint64_t window_size
 }
 
 template<typename T>
-std::vector<T> anti_transform(const std::vector<double>& coefficients, uint64_t window_size) {
+std::vector<T> anti_transform(const std::vector<double>& coefficients, uint64_t window_size, const mdct_cache& cache) {
 
-	uint64_t number_of_windows = coefficients / window_size;
+	// Minimum number of windows to fit the samples (not including the padding)
+	uint64_t number_of_windows = (coefficients.size() / window_size) - 1;
 
-	std::vector<T> samples((number_of_windows - 1) * window_size);
-
-	std::unordered_map <uint64_t, std::unordered_map<uint64_t, double>> cos_cache;
-	std::unordered_map<uint64_t, double> w_cache;
-
-	// Calculate cache
-	for (uint64_t n = 0; n < window_size * 2; ++n) {
-		double wn_body = std::numbers::pi / (2 * window_size) * (n + 0.5);
-		w_cache[n] = std::sin(wn_body);
-	}
-
-	for (uint64_t k = 0; k < window_size; ++k) {
-		for (uint64_t n = 0; n < window_size * 2; ++n) {
-			double cos_body = (std::numbers::pi / window_size) * (n + 0.5 + window_size / 2.0) * (k + 0.5);
-			cos_cache[k][n] = std::cos(cos_body);
-		}
-	}
+	std::vector<T> samples(number_of_windows * window_size);
 
 	std::cout << "Anti transform begin" << std::endl;
 
-	// For every coefficient
-	for (uint64_t i = 0; i < number_of_windows; ++i) {
+	// For every pair / coefficient
+	for (uint64_t i = 0; i < number_of_windows + 1; ++i) {
 
-		std::vector<double> window(window_size * 2);
+		uint64_t from = i * window_size;
 
-		// Calculate the window
+		std::vector<double> pair(window_size * 2);
+
+		// Calculate the pair (all n components)
 		for (uint64_t n = 0; n < window_size * 2; ++n) {
 
 			double yn = 0;
 
+			// Calculate the n component
 			for (uint64_t k = 0; k < window_size; ++k) {
-				double Xk = coefficients[k];
-				yn += (Xk * cos_cache[k][n]);
+				double Xk = coefficients[from + k];
+				yn += (Xk * cache.cos_cache[k][n]);
 			}
 
-			yn = yn * w_cache[n] * 2 / window_size;
+			yn = yn * cache.w_cache[n] * 2 / window_size;
 
-			window[n] = yn;
+			pair[n] = yn;
 		}
 
 		// Reconstruct the samples
@@ -115,23 +109,23 @@ std::vector<T> anti_transform(const std::vector<double>& coefficients, uint64_t 
 			uint64_t sample_offset = (i - 1) * window_size;
 
 			for (uint64_t window_offset = 0; window_offset < window_size; ++window_offset) {
-				samples[sample_offset + window_offset] += window[window_offset];
+				samples[sample_offset + window_offset] += pair[window_offset];
 			}
 		}
 
-		if (i != coefficients.size() - 1) {
+		if (i != number_of_windows) {
 			// second half -> sum to current window
 			uint64_t sample_offset = i * window_size;
 
 			for (uint64_t window_offset = 0; window_offset < window_size; ++window_offset) {
-				samples[sample_offset + window_offset] += window[window_size + window_offset];
+				samples[sample_offset + window_offset] += pair[window_size + window_offset];
 			}
 		}
 
-		std::cout << "Coefficient: " << i << " converted to window" << std::endl;
+		//std::cout << "Coefficient: " << i << " converted to pair" << std::endl;
 	}
 
-	std::cout << "Transform completed, total samples: " << samples.size() << std::endl;
+	std::cout << "Anti transform completed, total samples: " << samples.size() << std::endl;
 
 	return samples;
 }
@@ -292,14 +286,16 @@ static bool reconstruct_with_mdc(const std::string& input_file, const std::strin
 	entropy_calculator<int16_t> samples_entropy(samples.value());
 	std::cout << "Samples entropy: " << samples_entropy.entropy() << std::endl;
 
-	auto coefficients = transform<int16_t>(samples.value(), window_size);
+	mdct_cache cache(window_size);
+
+	auto coefficients = transform<int16_t>(samples.value(), window_size, cache);
 	auto quantized_coefficients = quantize<double, int32_t>(coefficients, quantization);
 	entropy_calculator<int32_t> quantized_coefficients_entropy(quantized_coefficients);
 	std::cout << "Quantized coefficients entropy: " << quantized_coefficients_entropy.entropy() << std::endl;
 
 	auto dequantized_samples = dequantize<int32_t, double>(quantized_coefficients, quantization);
 
-	auto reconstructed_samples = anti_transform<int16_t>(dequantized_samples, window_size);
+	auto reconstructed_samples = anti_transform<int16_t>(dequantized_samples, window_size, cache);
 
 	std::string output_file_name = "output.raw";
 	std::string reconstructed_output_path = output_path.empty() ? output_file_name : output_path + "/" + output_file_name;
