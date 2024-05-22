@@ -58,7 +58,7 @@ std::vector<double> transform(const std::vector<T>& values, uint64_t window_size
 		std::cout << "Window pair: " << i << " calculated" << std::endl;
 	}
 
-	std::cout << "Transform completed, total coefficients: " << coefficients .size() << std::endl;
+	std::cout << "Transform completed, total coefficients: " << coefficients.size() << std::endl;
 
 	return coefficients;
 }
@@ -66,7 +66,9 @@ std::vector<double> transform(const std::vector<T>& values, uint64_t window_size
 template<typename T>
 std::vector<T> anti_transform(const std::vector<double>& coefficients, uint64_t window_size) {
 
-	std::vector<T> samples(coefficients.size() - window_size);
+	uint64_t number_of_windows = coefficients / window_size;
+
+	std::vector<T> samples((number_of_windows - 1) * window_size);
 
 	std::unordered_map <uint64_t, std::unordered_map<uint64_t, double>> cos_cache;
 	std::unordered_map<uint64_t, double> w_cache;
@@ -87,9 +89,9 @@ std::vector<T> anti_transform(const std::vector<double>& coefficients, uint64_t 
 	std::cout << "Anti transform begin" << std::endl;
 
 	// For every coefficient
-	for (uint64_t i = 0; i < coefficients.size(); ++i) {
+	for (uint64_t i = 0; i < number_of_windows; ++i) {
 
-		std::vector<double> window;
+		std::vector<double> window(window_size * 2);
 
 		// Calculate the window
 		for (uint64_t n = 0; n < window_size * 2; ++n) {
@@ -103,7 +105,7 @@ std::vector<T> anti_transform(const std::vector<double>& coefficients, uint64_t 
 
 			yn = yn * w_cache[n] * 2 / window_size;
 
-			window.push_back(yn);
+			window[n] = yn;
 		}
 
 		// Reconstruct the samples
@@ -268,7 +270,7 @@ static bool reconstruct_with_quantization(const std::string& input_file, const s
 
 	std::string error_file_name = "error_qt.raw";
 	std::string error_output_path = output_path.empty() ? error_file_name : output_path + "/" + error_file_name;
-	
+
 	if (!write_samples<int16_t>(error_output_path, error)) {
 		return false;
 	}
