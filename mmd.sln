@@ -73,6 +73,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam11_ubjson", "exams\exam
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam12_qoi", "exams\exam12_qoi\exam12_qoi.vcxproj", "{53247E92-B650-4F3E-9267-C805F1D148EB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matroska", "assignments\matroska\matroska.vcxproj", "{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -337,6 +339,14 @@ Global
 		{53247E92-B650-4F3E-9267-C805F1D148EB}.Release|x64.Build.0 = Release|x64
 		{53247E92-B650-4F3E-9267-C805F1D148EB}.Release|x86.ActiveCfg = Release|Win32
 		{53247E92-B650-4F3E-9267-C805F1D148EB}.Release|x86.Build.0 = Release|Win32
+		{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9}.Debug|x64.ActiveCfg = Debug|x64
+		{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9}.Debug|x64.Build.0 = Debug|x64
+		{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9}.Debug|x86.ActiveCfg = Debug|Win32
+		{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9}.Debug|x86.Build.0 = Debug|Win32
+		{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9}.Release|x64.ActiveCfg = Release|x64
+		{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9}.Release|x64.Build.0 = Release|x64
+		{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9}.Release|x86.ActiveCfg = Release|Win32
+		{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -374,6 +384,7 @@ Global
 		{B244B51E-C901-484E-9FCE-1E60A5675287} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 		{388DED54-675B-462C-BB52-6719292A29B5} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 		{53247E92-B650-4F3E-9267-C805F1D148EB} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
+		{7A5C70B8-9F35-4A1C-AA2D-6FC2216080A9} = {5A64F4E1-1C9F-4AD3-92C8-5F529C943D74}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD783DDE-DBA3-48E3-8E48-B5F50E6DA2AE}
