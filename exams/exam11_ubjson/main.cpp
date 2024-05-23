@@ -165,16 +165,17 @@ static std::optional<generic_value> parse_object(std::ifstream& input) {
 
 	while (true) {
 
-		if (input.eof()) {
-			break;
-		}
-
 		if (input.peek() == '}') {
 			input.ignore(1);
 			break;
 		}
 
 		uint8_t size_type = raw_read<uint8_t>(input);
+
+		if (input.eof()) {
+			break;
+		}
+
 		std::string property_key = read_string(input, size_type);
 
 		uint8_t value_type = raw_read<uint8_t>(input);
