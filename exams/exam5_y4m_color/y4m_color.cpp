@@ -89,8 +89,8 @@ static std::pair<mat<vec3b>, bool> read_frame(const header_data& header, std::is
 	}
 
 	//Cb
-	for (int row = 0; row < header.height / 4; ++row) {
-		for (int col = 0; col < header.width / 4; ++col) {
+	for (int row = 0; row < header.height / 2; ++row) {
+		for (int col = 0; col < header.width / 2; ++col) {
 			uint8_t pixel = 0;
 			input.read(reinterpret_cast<char*>(&pixel), sizeof(pixel));
 
@@ -108,8 +108,8 @@ static std::pair<mat<vec3b>, bool> read_frame(const header_data& header, std::is
 	}
 
 	//Cr
-	for (int row = 0; row < header.height / 4; ++row) {
-		for (int col = 0; col < header.width / 4; ++col) {
+	for (int row = 0; row < header.height / 2; ++row) {
+		for (int col = 0; col < header.width / 2; ++col) {
 			uint8_t pixel = 0;
 			input.read(reinterpret_cast<char*>(&pixel), sizeof(pixel));
 
