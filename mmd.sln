@@ -97,6 +97,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam19_bmp1", "exams\exam19
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exam20_lzvn", "exams\exam20_lzvn\exam20_lzvn.vcxproj", "{8973FC8D-0451-45D9-9C0D-D34D726720D8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tiff", "assignments\tiff\tiff.vcxproj", "{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -457,6 +459,14 @@ Global
 		{8973FC8D-0451-45D9-9C0D-D34D726720D8}.Release|x64.Build.0 = Release|x64
 		{8973FC8D-0451-45D9-9C0D-D34D726720D8}.Release|x86.ActiveCfg = Release|Win32
 		{8973FC8D-0451-45D9-9C0D-D34D726720D8}.Release|x86.Build.0 = Release|Win32
+		{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529}.Debug|x64.ActiveCfg = Debug|x64
+		{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529}.Debug|x64.Build.0 = Debug|x64
+		{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529}.Debug|x86.ActiveCfg = Debug|Win32
+		{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529}.Debug|x86.Build.0 = Debug|Win32
+		{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529}.Release|x64.ActiveCfg = Release|x64
+		{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529}.Release|x64.Build.0 = Release|x64
+		{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529}.Release|x86.ActiveCfg = Release|Win32
+		{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -506,6 +516,7 @@ Global
 		{EEF4D9A5-FE8D-4399-A604-104F2AC33062} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 		{7EA38F6C-4FA0-4EF2-8384-B33C878F2B26} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
 		{8973FC8D-0451-45D9-9C0D-D34D726720D8} = {5ABCC512-02A2-47D3-A3B3-2C394C8FAAA6}
+		{39EB0CC7-B1A4-4D23-8BC7-51109B0D4529} = {5A64F4E1-1C9F-4AD3-92C8-5F529C943D74}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BD783DDE-DBA3-48E3-8E48-B5F50E6DA2AE}
