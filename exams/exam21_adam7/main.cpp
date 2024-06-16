@@ -1,21 +1,39 @@
-#include <iostream>
 #include <fstream>
-#include <cstdint>
+#include <iostream>
 #include <string>
+#include <cstdint>
 #include <vector>
 #include <map>
+#include <array>
+
+uint8_t adam7_pattern[8][8]{
+		{1, 6, 4, 6, 2, 6, 4, 6},
+		{7, 7, 7, 7, 7, 7, 7, 7},
+		{5, 6, 5, 6, 5, 6, 5, 6},
+		{7, 7, 7, 7, 7, 7, 7, 7},
+		{3, 6, 4, 6, 3, 6, 4, 6},
+		{7, 7, 7, 7, 7, 7, 7, 7},
+		{5, 6, 5, 6, 5, 6, 5, 6},
+		{7, 7, 7, 7, 7, 7, 7, 7}
+};
+
+using coord = std::array<uint8_t, 2>;
+
+std::map<uint8_t, std::vector<coord>> adam7_map = {
+	std::make_pair<uint8_t, std::vector<coord>>(1, {{0, 0}}),
+	std::make_pair<uint8_t, std::vector<coord>>(2, {{0, 4}}),
+	std::make_pair<uint8_t, std::vector<coord>>(3, {{4, 0}, {4, 4}}),
+	std::make_pair<uint8_t, std::vector<coord>>(4, {{0, 2}, {0, 6}, {4, 2}, {4, 6}}),
+	std::make_pair<uint8_t, std::vector<coord>>(5, {{2, 0}, {2, 2}, {2, 4}, {2, 6}, {6, 0}, {6, 2}, {6, 4}, {6, 6}}),
+	std::make_pair<uint8_t, std::vector<coord>>(6, {{0, 1}, {0, 3}, {0, 5}, {0, 7}, {2, 1}, {2, 3}, {2, 5}, {2, 7}, {4, 1}, {4, 3}, {4, 5}, {4, 7}, {6, 1}, {6, 3}, {6, 5}, {6, 7}}),
+	std::make_pair<uint8_t, std::vector<coord>>(7, {{1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {1, 6}, {1, 7}, {3, 0}, {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5}, {3, 6}, {3, 7}, {5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {5, 5}, {5, 6}, {5, 7}, {7, 0}, {7, 1}, {7, 2}, {7, 3}, {7, 4}, {7, 5}, {7, 6}, {7, 7}})
+};
 
 template<typename T>
-std::pair<T, bool> raw_read(std::istream& input) {
-	T buffer = 0;
-
-	input.read(reinterpret_cast<char*>(&buffer), sizeof(buffer));
-
-	if (input.eof()) {
-		return std::pair<T, bool>(buffer, false);
-	}
-
-	return std::pair<T, bool>(buffer, true);
+T raw_read(std::istream& input, size_t size = sizeof(T)) {
+	T value = 0;
+	input.read(reinterpret_cast<char*>(&value), size);
+	return value;
 }
 
 template<typename T>
@@ -23,404 +41,312 @@ void raw_write(std::ostream& output, T value) {
 	output.write(reinterpret_cast<char*>(&value), sizeof(value));
 }
 
-template<typename T>
+template <typename T>
 class matrix {
 private:
-	uint32_t rows_;
-	uint32_t cols_;
+	uint32_t rows_ = 0;
+	uint32_t cols_ = 0;
 	std::vector<T> data_;
 
 public:
-	matrix(uint32_t rows = 0, uint32_t columns = 0) : rows_(rows), cols_(columns) {
-		resize(rows_, cols_);
+	matrix() {}
+
+	matrix(uint32_t rows, uint32_t cols) {
+		resize(rows, cols);
 	}
 
-	void resize(uint32_t rows, uint32_t columns) {
+	void resize(uint32_t rows, uint32_t cols) {
 		rows_ = rows;
-		cols_ = columns;
+		cols_ = cols;
 		data_.resize(rows_ * cols_);
 	}
 
-	T get(uint32_t row, uint32_t col) const {
+	T& operator()(uint32_t row, uint32_t col) {
 		return data_[row * cols_ + col];
 	}
 
-	void set(uint32_t row, uint32_t col, T value) {
-		data_[row * cols_ + col] = value;
+	const T& operator()(uint32_t row, uint32_t col) const {
+		return data_[row * cols_ + col];
 	}
 
-	void set_row(uint32_t row, T values[]) {
-		for (uint32_t col = 0; col < cols_; ++col) {
-			data_[row * cols_ + col] = values[col];
-		}
-	}
-
-	void print(uint32_t max_rows, uint32_t max_cols) {
-
-		uint32_t rows_to_print = std::min(max_rows, rows_);
-		uint32_t cols_to_print = std::min(max_cols, cols_);
-
-		for (uint32_t row = 0; row < rows_to_print; ++row) {
-			for (uint32_t col = 0; col < cols_to_print; ++col) {
-				std::cout << get(row, col) << " ";
-			}
-			std::cout << std::endl << std::endl;
-		}
-
-		std::cout << std::endl << std::endl;
-	}
-
-	uint32_t rows() const {
-		return rows_;
-	}
-
-	uint32_t cols() const {
-		return cols_;
-	}
-
-	matrix<T> create_window(uint32_t reference_row, uint32_t reference_col, uint32_t rows, uint32_t cols) {
-		matrix<T> window(rows, cols);
-
-		for (uint32_t row = 0; row < rows; ++row) {
-			for (uint32_t col = 0; col < cols; ++col) {
-				T value = get(reference_row + row, reference_col + col);
-				window.set(row, col, value);
-			}
-		}
-
-		return window;
-	}
+	uint32_t rows() const { return rows_; }
+	uint32_t cols() const { return cols_; }
+	const auto begin() const { return data_.begin(); }
+	const auto end() const { return data_.end(); }
 };
 
-class pmg_reader {
-private:
-	std::istream& input_;
-	uint16_t width_ = 0;
-	uint16_t heigth_ = 0;
-	uint16_t max_value_ = 0;
-	matrix<uint16_t> data_;
+static matrix<uint8_t> load_pgm(std::ifstream& input) {
 
-	// TODO: to test
-	uint16_t little_ending_to_big_endian(uint16_t number) {
+	std::string magic_number;
+	input >> magic_number >> std::ws;
 
-		uint16_t buffer = 0;
-
-		// high byte to low byte
-		for (uint16_t i = 0; i < 8; ++i) {
-			uint8_t shifts = 16 - 1 - i;
-			bool bit = (number >> shifts) & 1;
-			uint16_t mask = 1 << (shifts - 8);
-			buffer |= mask;
-		}
-
-		// low byte to high byte
-		for (uint16_t i = 0; i < 8; ++i) {
-			uint8_t shifts = 8 - 1 - i;
-			bool bit = (number >> shifts) & 1;
-			uint16_t mask = 1 << (shifts + 8);
-			buffer |= mask;
-		}
-
-		return buffer;
+	if (input.peek() == '#') {
+		std::string comment;
+		std::getline(input, comment);
 	}
 
-public:
-	pmg_reader(std::istream& input) : input_(input) { }
+	std::string width;
+	input >> width >> std::ws;
 
-	bool read() {
-		std::string magic_number;
-		input_ >> magic_number;
-		input_ >> std::ws;
+	std::string height;
+	input >> height >> std::ws;
 
-		char read_char = input_.peek();
-		bool is_comment = read_char == '#';
+	std::string max_value;
+	input >> max_value >> std::ws;
 
-		if (is_comment) {
-			std::string comment;
-			std::getline(input_, comment);
-			input_ >> std::ws;
+	matrix<uint8_t> raster(std::stoi(height), std::stoi(width));
+
+	for (uint32_t row = 0; row < raster.rows(); ++row) {
+		for (uint32_t col = 0; col < raster.cols(); ++col) {
+			raster(row, col) = raw_read<uint8_t>(input);
 		}
+	}
 
-		std::string raw_width;
-		input_ >> raw_width;
-		width_ = std::stoi(raw_width);
+	return raster;
+}
 
-		std::string raw_heigth;
-		input_ >> raw_heigth;
-		heigth_ = std::stoi(raw_heigth);
+static std::map<uint8_t, std::vector<uint8_t>> apply_adam7_pattern(const matrix<uint8_t>& image) {
 
-		input_ >> std::ws;
+	std::map<uint8_t, std::vector<uint8_t>> images;
 
-		data_.resize(heigth_, width_);
+	for (uint32_t row = 0; row < image.rows(); ++row) {
+		for (uint32_t col = 0; col < image.cols(); ++col) {
 
-		std::string raw_max_value;
-		input_ >> raw_max_value;
-		max_value_ = std::stoi(raw_max_value);
+			// Calculate the row and column in the pattern depeding on row and col in the image
+			uint8_t pattern_row = row % 8;
+			uint8_t pattern_col = col % 8;
 
-		input_ >> std::ws;
+			// Get the index in the images based on the pattern
+			uint8_t vector_index = adam7_pattern[pattern_row][pattern_col];
 
-		for (uint16_t h = 0; h < heigth_; ++h) {
-			for (uint16_t w = 0; w < width_; ++w) {
+			// Assign the pixel
+			images[vector_index].push_back(image(row, col));
+		}
+	}
 
-				uint16_t read_value = 0;
+	return images;
+}
 
-				if (max_value_ < 256) { // 1 byte
+static bool compress(const std::string& input_file, const std::string& output_file) {
 
-					auto result = raw_read<uint8_t>(input_);
+	std::ifstream input(input_file, std::ios::binary);
 
-					if (!result.second) {
-						return false;
-					}
+	if (!input) {
+		std::cerr << "Failed to open input file" << std::endl;
+		return false;
+	}
 
-					read_value = result.first;
+	matrix<uint8_t> pgm_image = load_pgm(input);
+	std::map<uint8_t, std::vector<uint8_t>> adam7_images = apply_adam7_pattern(pgm_image);
+
+	std::ofstream output(output_file, std::ios::binary);
+
+	if (!output) {
+		std::cerr << "Failed to open output file" << std::endl;
+		return false;
+	}
+
+	output << "MULTIRES";
+	raw_write(output, pgm_image.cols());
+	raw_write(output, pgm_image.rows());
+
+	for (const auto& image : adam7_images) {
+		for (const auto& pixel : image.second) {
+			raw_write(output, pixel);
+		}
+	}
+
+	return true;
+}
+
+static void write_pgm(std::string prefix, uint8_t index, const matrix<uint8_t>& image) {
+
+	std::string file_name = prefix + "_" + std::to_string(index) + ".pgm";
+
+	std::ofstream output(file_name, std::ios::binary);
+
+	if (!output) {
+		std::cerr << "Failed to open output file" << std::endl;
+		return;
+	}
+
+	output << "P5" << std::endl;
+	output << image.cols() << " ";
+	output << image.rows() << std::endl;
+	output << 255 << std::endl;
+
+	for (uint32_t row = 0; row < image.rows(); ++row) {
+		for (uint32_t col = 0; col < image.cols(); ++col) {
+			uint8_t pixel = image(row, col);
+			raw_write(output, pixel);
+		}
+	}
+}
+
+static matrix<uint8_t> compute_level(matrix<uint8_t> image, uint8_t level, std::vector<uint8_t>& level_data) {
+
+	uint8_t level_rows = 0;
+
+	switch (level) {
+	case 1:
+	case 2:
+		level_rows = 8; break;
+	case 3:
+	case 4:
+		level_rows = 4; break;
+	case 5:
+	case 6:
+		level_rows = 2; break;
+	case 7:
+		level_rows = 1; break;
+	}
+
+	uint8_t level_cols = 0;
+
+	switch (level) {
+	case 1:
+		level_cols = 8; break;
+	case 2:
+	case 3:
+		level_cols = 4; break;
+	case 4:
+	case 5:
+		level_cols = 2; break;
+	case 6:
+	case 7:
+		level_cols = 1; break;
+	}
+
+	// TODO: missing image offset increate
+	// TODO: don't increase the level_data index if the mapped coord is outside the image 
+
+	// For every value stored for the given level
+	for (size_t i = 0; i < level_data.size(); ++i) {
+
+		size_t map_level_size = adam7_map[level].size();
+		auto index = i % map_level_size;
+
+		// Find the coordinate of the value in the adam7 matrix
+		auto& coord = adam7_map[level][index];
+
+		// Loop the window (offset from the coordinate)
+		for (uint32_t row = 0; row < level_rows; ++row) {
+			for (uint32_t col = 0; col < level_cols; ++col) {
+
+				auto current_row = coord[0] + row;
+
+				// Skip if outside the window
+				if (current_row > image.rows() - 1) {
+					continue;
 				}
-				else { // 2 bytes big endian
 
-					auto result = raw_read<uint16_t>(input_);
+				auto current_col = coord[1] + col;
 
-					if (!result.second) {
-						return false;
-					}
-
-					read_value = little_ending_to_big_endian(result.first);
+				// Skip if outside the window
+				if (current_col > image.cols() - 1) {
+					continue;
 				}
 
-				data_.set(h, w, read_value);
-			}
-		}
-
-		//data_.print(8, 24);
-
-		return true;
-	}
-
-	uint32_t width() const {
-		return width_;
-	}
-
-	uint32_t height() const {
-		return heigth_;
-	}
-
-	uint32_t max_value() const {
-		return max_value_;
-	}
-
-	const matrix<uint16_t> data() const {
-		return data_;
-	}
-};
-
-class mlt_writer {
-private:
-	std::ostream& output_;
-	matrix<uint32_t> pattern_;
-	std::map<uint32_t, std::vector<uint16_t>> levels_;
-
-	void apply_pattern_over_image(matrix<uint16_t> pmg_data) {
-
-		for (uint32_t current_row_pixel = 0; current_row_pixel < pmg_data.rows();) {
-
-			uint32_t remaining_row_pixels = pmg_data.rows() - current_row_pixel;
-			uint32_t pixels_in_row = std::min<uint32_t>(8, remaining_row_pixels);
-
-			for (uint32_t current_column_pixel = 0; current_column_pixel < pmg_data.cols();) {
-
-				uint32_t remaining_column_pixels = pmg_data.cols() - current_column_pixel;
-				uint32_t pixels_in_column = std::min<uint32_t>(8, remaining_column_pixels);
-
-				matrix<uint16_t> t = pmg_data.create_window(current_row_pixel, current_column_pixel, pixels_in_row, pixels_in_column);
-
-				apply_pattern_over_window(t);
-
-				current_column_pixel += pixels_in_column;
-			}
-
-			current_row_pixel += pixels_in_row;
-		}
-	}
-
-	void apply_pattern_over_window(matrix<uint16_t>& window) {
-
-		for (uint32_t row = 0; row < window.rows(); ++row) {
-			for (uint32_t col = 0; col < window.cols(); ++col) {
-				uint32_t level = pattern_.get(row, col);
-				uint16_t pixel = window.get(row, col);
-				levels_[level].push_back(pixel);
+				// Set the image value
+				image(current_row, current_col) = level_data[index];
 			}
 		}
 	}
 
-public:
-	mlt_writer(std::ostream& output) : output_(output) {
+	return image;
+}
 
-		pattern_.resize(8, 8);
+static std::vector<uint32_t> get_adam7_levels_from_size(uint32_t width, uint32_t height) {
 
-		uint32_t row0[] = { 1, 6, 4, 6, 2, 6, 4, 6 };
-		pattern_.set_row(0, row0);
+	std::vector<uint32_t> levels(7);
 
-		uint32_t row1[] = { 7, 7, 7, 7, 7, 7, 7, 7 };
-		pattern_.set_row(1, row1);
+	for (uint32_t row = 0; row < height; ++row) {
+		for (uint32_t col = 0; col < width; ++col) {
 
-		uint32_t row2[] = { 5, 6, 5, 6, 5, 6, 5, 6 };
-		pattern_.set_row(2, row2);
+			// Calculate the row and column in the pattern depeding on row and col in the image
+			uint8_t pattern_row = row % 8;
+			uint8_t pattern_col = col % 8;
 
-		uint32_t row3[] = { 7, 7, 7, 7, 7, 7, 7, 7 };
-		pattern_.set_row(3, row3);
+			size_t adam7_value = adam7_pattern[pattern_row][pattern_col];
 
-		uint32_t row4[] = { 3, 6, 4, 6, 3, 6, 4, 6 };
-		pattern_.set_row(4, row4);
-
-		uint32_t row5[] = { 7, 7, 7, 7, 7, 7, 7, 7 };
-		pattern_.set_row(5, row5);
-
-		uint32_t row6[] = { 5, 6 ,5, 6, 5, 6, 5, 6 };
-		pattern_.set_row(6, row6);
-
-		uint32_t row7[] = { 7, 7, 7, 7, 7, 7, 7, 7 };
-		pattern_.set_row(7, row7);
-	}
-
-	void write_pmg(const pmg_reader& pmg) {
-
-		output_ << "MULTIRES";
-
-		raw_write<uint32_t>(output_, pmg.width());
-		raw_write<uint32_t>(output_, pmg.height());
-
-		apply_pattern_over_image(pmg.data());
-
-		for (auto& level : levels_) {
-			for (auto& level_item : level.second) {
-
-				if (pmg.max_value() > 255) {
-					raw_write<uint16_t>(output_, level_item);
-				}
-				else {
-					raw_write<uint8_t>(output_, level_item);
-				}
-			}
+			// Increase the number of pixels
+			levels[adam7_value - 1]++;
 		}
 	}
-};
 
-class mlt_reader {
-private:
-	std::istream& input_;
-	matrix<uint16_t> data_; 
+	return levels;
+}
 
-public:
-	mlt_reader(std::istream& input) : input_(input) { }
+static bool decompress(const std::string& input_file, const std::string& prefix) {
 
-	bool read() {
+	std::ifstream input(input_file, std::ios::binary);
 
-		for (uint8_t i = 0; i < 8; ++i) {
-			auto char_result = raw_read<uint8_t>(input_);
-
-			if (!char_result.second) {
-				return false;
-			}
-		}
-
-		auto width_result = raw_read<uint32_t>(input_);
-
-		if (!width_result.second) {
-			return false;
-		}
-
-		auto height_result = raw_read<uint32_t>(input_);
-
-		if (!height_result.second) {
-			return false;
-		}
-
-		uint32_t number_of_blocks = (width_result.first * height_result.first) / 8;
-		uint32_t partial_vertical_block = width_result.first % 8;
-		uint32_t partial_horizontal_block = height_result.first % 8;
-
-		// TODO: final bottom right corner
-
-
-
-		// Assumption: the reading will only have pixels of 8 bits
-		auto level_value = raw_read<uint8_t>(input_);
-
-
-
-
-
-		// TODO: read the levels
-
-		return true;
+	if (!input) {
+		std::cerr << "Failed to open input file" << std::endl;
+		return false;
 	}
 
-};
+	std::string magic_string(8, 0);
+	input.read(reinterpret_cast<char*>(magic_string.data()), magic_string.size());
 
-class pmg_writer {
-private:
-	std::string prefix_;
+	uint32_t width = raw_read<uint32_t>(input);
+	uint32_t height = raw_read<uint32_t>(input);
 
-public:
-	pmg_writer(std::string prefix) : prefix_(prefix) {}
+	std::vector<uint32_t> levels = get_adam7_levels_from_size(width, height);
 
-	void write(const mlt_reader& mlt) {
+	std::map<uint8_t, std::vector<uint8_t>> levels_data;
 
+	for (uint32_t i = 0; i < levels.size(); ++i) {
+		for (uint32_t value = 0; value < levels[i]; ++value) {
+			uint8_t pixel = raw_read<uint8_t>(input);
+			levels_data[i + 1].push_back(pixel);
+		}
 	}
-};
+
+	matrix<uint8_t> image1 = compute_level(matrix<uint8_t>(height, width), 1, levels_data[1]);
+	write_pgm(prefix, 1, image1);
+
+	matrix<uint8_t> image2 = compute_level(image1, 2, levels_data[2]);
+	write_pgm(prefix, 2, image2);
+
+	matrix<uint8_t> image3 = compute_level(image2, 3, levels_data[3]);
+	write_pgm(prefix, 3, image3);
+
+	matrix<uint8_t> image4 = compute_level(image3, 4, levels_data[4]);
+	write_pgm(prefix, 4, image4);
+
+	matrix<uint8_t> image5 = compute_level(image4, 5, levels_data[5]);
+	write_pgm(prefix, 5, image5);
+
+	matrix<uint8_t> image6 = compute_level(image5, 6, levels_data[6]);
+	write_pgm(prefix, 6, image6);
+
+	matrix<uint8_t> image7 = compute_level(image6, 7, levels_data[7]);
+	write_pgm(prefix, 7, image7);
+
+	return true;
+}
 
 int main(int argc, char* argv[]) {
 
 	if (argc != 4) {
-		std::cerr << "Invalid number of arguments" << std::endl;
+		std::cerr << "Wrong number or arguments" << std::endl;
 		return EXIT_FAILURE;
 	}
 
 	std::string mode(argv[1]);
 
-	if (!(mode == "c" || mode == "d")) {
-		std::cerr << "The mode must be a single character with value either c or d" << std::endl;
-		return EXIT_FAILURE;
-	}
+	bool compress_mode = (mode == "c");
 
-	bool compress = mode == "c";
-
-	std::ifstream input(argv[2], std::ios::binary);
-
-	if (!input) {
-		std::cerr << "Failed to open the input file" << std::endl;
-		return EXIT_FAILURE;
-	}
-
-	if (compress) { // pgm to mlt
-
-		std::ofstream output(argv[3], std::ios::binary);
-
-		if (!output) {
-			std::cerr << "Failed to open the output file" << std::endl;
+	if (compress_mode) {
+		if (!compress(argv[2], argv[3])) {
 			return EXIT_FAILURE;
 		}
-
-		pmg_reader reader(input);
-
-		if (!reader.read()) {
-			std::cerr << "Failed to read the input file" << std::endl;
-			return EXIT_FAILURE;
-		}
-
-		mlt_writer writer(output);
-		writer.write_pmg(reader);
 	}
-	else { // mlt to 7 pgm files using the prefix
-
-		mlt_reader reader(input);
-
-		if (!reader.read()) {
-			std::cerr << "Failed to read the input file" << std::endl;
+	else {
+		if (!decompress(argv[2], argv[3])) {
 			return EXIT_FAILURE;
 		}
-
-		pmg_writer writer(argv[3]);
-		writer.write(reader);
 	}
 
 	return EXIT_SUCCESS;
