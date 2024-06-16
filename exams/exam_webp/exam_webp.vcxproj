@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{180e93f0-38b0-4f44-8b30-f9c16801c5a7}</ProjectGuid>
-    <RootNamespace>exam21adam7</RootNamespace>
+    <ProjectGuid>{e02aef12-8bbf-4f10-a52d-19adfc98f408}</ProjectGuid>
+    <RootNamespace>exam_webp</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
